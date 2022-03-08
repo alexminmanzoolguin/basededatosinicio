@@ -1,0 +1,94 @@
+mysql -h localhost -u root -p
+create database controlescolar;
+use controlescolar;
+
+create table  direccion_base(
+id_dire int(20)  primary key,
+pais varchar(30),
+estado varchar(30),
+municipio varchar(30),
+ciudad varchar(30));
+
+create table ubicacion(
+id_ubicacion int(20) primary key,
+numero int(30),
+codigopostal int(30),
+id_dire int(20),
+foreign key(id_dire) references direccion_base(id_dire));
+
+create table grado(
+id_grado int(20) primary key,
+grado varchar(25));
+
+create table persona(
+id_persona int(20) primary key,
+nombre varchar(30),
+apell_pat varchar(30),
+apell_mat varchar(30));
+
+create table alumno(
+id_alumno int(11) primary key,
+correo varchar(25),
+curp varchar(25),
+fecha_nat varchar(25),
+id_grado int(20),
+id_persona int(20),
+id_ubicacion int(20),
+foreign key(id_grado) references grado(id_grado),
+foreign key(id_persona) references persona(id_persona),
+foreign key(id_ubicacion) references ubicacion(id_ubicacion));
+
+create table medio_ins(
+id_medio int(20) primary key,
+medio varchar(30));
+
+create table puesto(
+id_puesto int(20) primary key,
+puesto varchar(30));
+
+create table administrativo(
+id_administrativo int(20) primary key,
+id_persona int(20),
+id_puesto int(20),
+foreign key(id_persona) references persona(id_persona),
+foreign key(id_puesto) references puesto(id_puesto));
+
+create table inscripcion(
+id_insc int(20) primary key,
+fecha datetime,
+id_medio int(20),
+id_administrativo int(20),
+id_alumno int(20),
+foreign key(id_medio) references medio_ins(id_medio),
+foreign key(id_administrativo) references administrativo(id_administrativo),
+foreign key(id_alumno) references alumno(id_alumno));
+
+create table materia(
+id_materia int(20) primary key,
+nombre varchar(30),
+horas int(30),
+calificacion_min int(50));
+
+create table profesor(
+id_profesor int(20) primary key,
+correo varchar(30),
+id_persona int(20),
+id_ubicacion int(20),
+id_puesto int(20),
+foreign key(id_persona) references persona(id_persona),
+foreign key(id_ubicacion) references ubicacion(id_ubicacion),
+foreign key(id_puesto) references puesto(id_puesto));
+
+create table mat_pro(
+id_matpro int(20) primary key,
+id_materia int(20),
+id_profesor int(20),
+foreign key(id_materia) references materia(id_materia),
+foreign key(id_profesor) references profesor(id_profesor));
+
+create table altamat(
+id_altamat int(20) primary key,
+id_matpro int(20),
+id_alumno int(20),
+foreign key(id_matpro) references mat_pro(id_matpro),
+foreign key(id_alumno) references alumno(id_alumno));

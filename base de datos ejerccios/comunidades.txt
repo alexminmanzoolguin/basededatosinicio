@@ -1,0 +1,94 @@
+mysql -h localhost -u root -p
+create database comunidades;
+use comunidades;
+
+create table  dereccion_base(
+id_dire int(20)  primary key,
+pais varchar(30),
+estado varchar(30),
+municipio varchar(30),
+ciudad varchar(30);
+);
+
+create table ubicacion(
+id_ubicacion int(20) primary key,
+numero int(30),
+codigopostal int(30),
+id_dire int(20),
+foreign key(id_dire) references direccion_base(id_dire));
+
+create table redes(
+id_redes int(20) primary key,
+nombre varchar(30),
+enlace varchar(30));
+
+create table tipocomunidad(
+id_tipocomu int(20) primary key,
+tipo_comunidad varchar(30));
+
+create table comunidad(
+id_comunidad int(20)primary key,
+nombre varchar(30),
+id_tipocomu int(20),
+id_dire int(20),
+foreign key(id_tipocomu) references tipocomunidad(id_tipocomu),
+foreign key(id_dire) references direccion_base(id_dire));
+
+create table redcom(
+id_redcom int(20) primary key,
+id_redes int(20),
+id_comunidad int(20),
+foreign key(id_redes) references redes(id_redes),
+foreign key(id_comunidad) references comunidad(id_comunidad));
+
+create table evento(
+id_evento int(20) primary key,
+nombre varchar(30),
+objetivo varchar(50),
+fecha datetime,
+id_comunidad int(20),
+foreign key(id_comunidad) references comunidad(id_comunidad));
+
+create table requerimiento(
+id_requerimiento int(20) primary key,
+nombre varchar(30),
+id_evento int(20),
+foreign key(id_evento) references evento(id_evento));
+
+create table medios(
+id_medio int(20) primary key,
+medio varchar(30));
+
+create table medeve(
+id_medeve int(20) primary key,
+detalle varchar(50),
+id_evento int(20),
+id_medio int(20),
+foreign key(id_evento) references evento(id_evento),
+foreign key(id_medio) references medios(id_medio)
+);
+
+
+create table difusion(
+id_difusion int(20) primary key,
+difusion varchar(30)
+);
+
+create table persona(
+id_persona int(20) primary key,
+nombre varchar(20),
+ape_pat varchar(20),
+ape_mat varchar(20),
+ocupacion varchar(20),
+id_ubicacion int(20),
+foreign key(id_ubicacion) references ubicacion(id_ubicacion)
+);
+
+create table asiste(
+id_asiste int(20) primary key,
+motivo varchar(50),
+id_difusion int(20),
+id_persona int(20),
+foreign key(id_difusion) references difusion(id_difusion),
+foreign key(id_persona) references persona(id_persona)
+);
